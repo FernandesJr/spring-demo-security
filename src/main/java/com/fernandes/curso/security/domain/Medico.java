@@ -37,6 +37,10 @@ public class Medico extends AbstractEntity {
 	private Set<Especialidade> especialidades;
 	
 	// evita recursividade quando o json de resposta for criado para a datatables.
+	//A biblioteca Jackson que é responsável por converter os Objetos javas em Json entra e infinity loop
+	//Se não tiver essa anotação, ao tentar converter agendamentos vai acessar essa classe, porém, quando
+	//Chegar lá terá também objeto médico dai ela volta para cá. Ao chegar tentar novamente converter
+	//agendamentos e entra no loop infinito
 	@JsonIgnore
 	@OneToMany(mappedBy = "medico")
 	private List<Agendamento> agendamentos;

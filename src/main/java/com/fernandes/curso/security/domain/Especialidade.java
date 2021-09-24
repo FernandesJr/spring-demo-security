@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "especialidades", indexes = {@Index(name = "idx_especialidade_titulo", columnList = "titulo")})
 public class Especialidade extends AbstractEntity {

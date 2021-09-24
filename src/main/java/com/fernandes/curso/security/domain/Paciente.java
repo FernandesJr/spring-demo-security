@@ -8,7 +8,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "pacientes")
 public class Paciente extends AbstractEntity {

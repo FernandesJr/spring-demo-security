@@ -6,7 +6,6 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "agendamentos") 
 public class Agendamento extends AbstractEntity {

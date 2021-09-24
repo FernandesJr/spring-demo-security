@@ -7,7 +7,6 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "usuarios", indexes = {@Index(name = "idx_usuario_email", columnList = "email")})
 public class Usuario extends AbstractEntity {	

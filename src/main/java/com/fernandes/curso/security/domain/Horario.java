@@ -4,7 +4,6 @@ import java.time.LocalTime;
 
 import javax.persistence.*;
 
-@SuppressWarnings("serial")
 @Entity
 @Table(name = "horas", indexes = {@Index(name = "idx_hora_minuto", columnList = "hora_minuto")})
 public class Horario extends AbstractEntity {
