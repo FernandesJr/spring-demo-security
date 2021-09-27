@@ -27,13 +27,14 @@ public class UsuarioServico implements UserDetailsService {
 
     //Lembrando que o Security faz criptografia das senhas
     //Sendo assim a Class ConfigSecurity recebe qual o padrão de criptografia, para comparar neste momento
-    @Override
+    //Na autenticação o Spring vem nesse método para autenticar
+    @Override @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         Usuario user = buscarPorEmail(userName);
         return new User(
                 user.getEmail(),
                 user.getSenha(),
-                AuthorityUtils.createAuthorityList(this.getAuthorities(user.getPerfis()))
+                AuthorityUtils.createAuthorityList(this.getAuthorities(user.getPerfis())) //Por causa desse get precisa adicionar o Transactional é nesse momento que o JPA vai buscar a lista no BD
         );
     }
 
