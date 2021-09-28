@@ -2,7 +2,7 @@ $(document).ready(function () {
 	moment.locale('pt-BR');
     var table = $('#table-especializacao').DataTable({
     	searching: true,
-    	order: [[ 1, "asc" ]],
+    	order: [[ 1, "asc" ]], //Ordenação por titulo
     	lengthMenu: [5, 10],
         processing: true,
         serverSide: true,

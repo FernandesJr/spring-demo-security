@@ -34,7 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                 .and()
                     .logout()
-                    .logoutSuccessUrl("/");
+                    .logoutSuccessUrl("/")
+                .and()
+                    .exceptionHandling()
+                    .accessDeniedPage("/acesso-negado"); //Tratando a exceção de restrição de acesso
     }
 
     //Dizendo ao Spring que tipo de criptografia será utilizada
