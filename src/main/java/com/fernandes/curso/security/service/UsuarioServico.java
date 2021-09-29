@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,5 +64,15 @@ public class UsuarioServico implements UserDetailsService {
                 ? repository.findAll(datatables.getPageable())
                 : repository.findByEmailOrPerfil(datatables.getPageable(), datatables.getSearch());
         return datatables.getResponse(page);
+    }
+
+    public void salvarUsuario(Usuario usuario) {
+        String crypt = new BCryptPasswordEncoder().encode(usuario.getSenha());
+        usuario.setSenha(crypt);
+        repository.save(usuario);
+    }
+
+    public Usuario buscarPorId(Long id) {
+        return repository.findById(id).get();
     }
 }
