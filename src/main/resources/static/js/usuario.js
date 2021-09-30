@@ -49,5 +49,17 @@ $(document).ready(function() {
 				}
 		]
 	});
+
+	//Prepara href para btn de dados pessoais
+	//Captura o click no btn com isso seleciona a linha do click
+	//Armazenas as colunas que tem na linha
+	$("#table-usuarios tbody").on("click", "[id*='dp_']", function(){
+	    var row = table.row($(this).parents("tr")).data();
+	    var aux = new Array();
+	    $.each(row.perfis, function(k, v){
+	        aux.push(v.id);
+	    });
+	    document.location.href = "/u/editar/dados/usuario/" + row.id + "/perfis/" + aux;
+	});
 	
 });	

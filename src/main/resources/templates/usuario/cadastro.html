@@ -92,7 +92,7 @@
 	</section>
 	<script	th:src="~{}" th:fragment="js"></script>
 	<script th:inline="javascript" th:fragment="inlinescript">
-
+		//Setando as informações no selected de múltiplas escolhas
 		$('#perfis').ready(function(){
 			var perfis = [[${usuario.perfis}]]; //Expressão que o Thymeleaf consegue se comunicar com o JS inline
 			$.each(perfis, function(k, v){

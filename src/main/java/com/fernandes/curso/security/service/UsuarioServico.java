@@ -75,4 +75,11 @@ public class UsuarioServico implements UserDetailsService {
     public Usuario buscarPorId(Long id) {
         return repository.findById(id).get();
     }
+
+    public Usuario buscarPorIdPerfil(Long usuarioId, Long[] perfisId) {
+        return repository.findByIdPerfis(usuarioId, perfisId)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário inexistente."));
+        //Caso a consulta volte vazia dispara um exceção
+        //Enquanto isso a Class ExceptionController está ouvindo se a app dispara esse tipo para assim tratar.
+    }
 }
