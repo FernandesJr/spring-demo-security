@@ -1,8 +1,12 @@
 package com.fernandes.curso.security.web.controller;
 
 import com.fernandes.curso.security.domain.Medico;
+import com.fernandes.curso.security.domain.Usuario;
 import com.fernandes.curso.security.service.MedicoService;
+import com.fernandes.curso.security.service.UsuarioServico;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,14 +21,23 @@ public class MedicoController {
     @Autowired
     private MedicoService service;
 
-    @GetMapping({"/dados"})
-    public String dados(Medico medico, ModelMap model){
+    @Autowired
+    private UsuarioServico usuarioService;
 
+    @GetMapping({"/dados"})
+    public String dados(Medico medico, ModelMap model, @AuthenticationPrincipal User user){
+        if(medico.hasNotId()){
+            model.addAttribute("medico", service.buscarPorEmail(user.getUsername()));
+        }
         return "medico/cadastro";
     }
 
     @PostMapping("/salvar")
-    public String salvar(Medico medico, RedirectAttributes attr){
+    public String salvar(Medico medico, RedirectAttributes attr, @AuthenticationPrincipal User user){
+        if (medico.hasNotId()){
+            Usuario usuario = usuarioService.buscarPorEmail(user.getUsername());
+            medico.setUsuario(usuario);
+        }
         service.salvar(medico);
         attr.addFlashAttribute("medico", medico);
         attr.addFlashAttribute("sucesso", "Operação feita com sucesso.");
