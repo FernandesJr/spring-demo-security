@@ -3,6 +3,7 @@ package com.fernandes.curso.security.web.controller;
 import com.fernandes.curso.security.domain.Especialidade;
 import com.fernandes.curso.security.service.EspecialidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping("especialidades")
@@ -52,5 +54,11 @@ public class EspecialidadeController {
         service.excluir(id);
         attr.addFlashAttribute("sucesso", "Especialidade excluída com sucesso.");
         return "redirect:/especialidades";
+    }
+
+    @GetMapping("/titulo")
+    public ResponseEntity<?> getTituloEspecialdiade(@Param("termo") String termo){
+        List<String> especialidades = service.buscarPorTermo(termo);
+        return ResponseEntity.ok(especialidades);
     }
 }
