@@ -121,12 +121,13 @@ public class UsuarioController {
         }
 
         Usuario u = servico.buscarPorEmail(user.getUsername());
-        if(!servico.validarSenha(u, s3)){
+        if(!servico.validarSenha(u.getSenha(), s3)){
             attr.addFlashAttribute("falha", "Senha do usuário não confere.");
             return "redirect:/u/editar/senha";
         }
 
-        servico.redefinirSenha(u, s3);
-        return "";
+        servico.redefinirSenha(u, s1);
+        attr.addFlashAttribute("sucesso", "Senha alterada com sucesso.");
+        return "redirect:/u/editar/senha";
     }
 }

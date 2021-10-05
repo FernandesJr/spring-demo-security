@@ -83,8 +83,8 @@ public class UsuarioServico implements UserDetailsService {
         //Enquanto isso a Class ExceptionController está ouvindo se a app dispara esse tipo para assim tratar.
     }
 
-    public boolean validarSenha(Usuario u, String senhaAtualForm) {
-        return new BCryptPasswordEncoder().matches(u.getSenha(), senhaAtualForm);
+    public boolean validarSenha(String senhaDB, String senhaAtualForm) {
+        return new BCryptPasswordEncoder().matches(senhaAtualForm, senhaDB);
     }
 
     public void redefinirSenha(Usuario u, String novaSenha) {

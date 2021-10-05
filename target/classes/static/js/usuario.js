@@ -66,7 +66,13 @@ $(document).ready(function() {
 
 //Verifica se os campos de input da nova senha estão iguais
 $('.pass').keyup(function(){
-    $('#senha1').val() === $('#senha2').val()
-        ? $('#senha3').removeAttr('readonly')
-        : $('#senha3').attr('readonly', 'readonly');
+    if($('#senha1').val() == "" || $('#senha2').val() == ""){
+        $('#senha3').val("");
+        //$("p").text("Hello world!");
+        $('#senha3').attr('readonly', 'readonly');
+    }else{
+        $('#senha1').val() === $('#senha2').val()
+                ? $('#senha3').removeAttr('readonly')
+                : $('#senha3').attr('readonly', 'readonly');
+    }
 });
