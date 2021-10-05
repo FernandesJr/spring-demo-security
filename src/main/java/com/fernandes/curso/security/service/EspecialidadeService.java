@@ -6,12 +6,15 @@ import com.fernandes.curso.security.domain.Especialidade;
 import com.fernandes.curso.security.repository.EspecialidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class EspecialidadeService {
@@ -48,5 +51,16 @@ public class EspecialidadeService {
 
     public List<String> buscarPorTermo(String termo) {
         return repository.findByTermo(termo);
+    }
+
+    public Set<Especialidade> buscarPorTitulos(String[] titulos) {
+        return repository.findByTitulos(titulos);
+    }
+
+    public Map<String, Object> buscarPorMedico(Long idMedico, HttpServletRequest request) {
+        datatables.setColunas(DatatablesColunas.ESPECIALIDADES);
+        datatables.setRequest(request);
+        Page<Especialidade> page = repository.findByMedico(datatables.getPageable(), idMedico);
+        return datatables.getResponse(page);
     }
 }

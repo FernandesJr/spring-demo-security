@@ -1,3 +1,4 @@
+//Esse código se encontra na página do Jquery
 // processa o auto-complete
 $(function() {
 	// remove o espaco depois da virgula
@@ -16,7 +17,7 @@ $(function() {
 
     function exibeMessagem(texto) {
         $('.add-toast').append(""
-          .concat('<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2800">',
+          .concat('<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="4000">',
                   '<div class="toast-header">',
                   '<strong class="mr-auto">Atenção</strong>',
                   '<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">',
@@ -32,7 +33,7 @@ $(function() {
         });
     }
 
-	$("#autocomplete-especialidades")
+	$("#autocomplete-especialidades") //Dispara a cada caractere adicionado
 		.on("keydown",	function(event) {
 			if (event.keyCode === $.ui.keyCode.TAB
 					&& $(this).autocomplete("instance").menu.active) {
@@ -40,13 +41,13 @@ $(function() {
 			}
 		})
 		.autocomplete({
-			source : function(request, response) {
+			source : function(request, response) { //Json que vai e outro voltando na resposta
 				$.getJSON("/especialidades/titulo", {
 					termo : extractLast(request.term)
 				}, response);
 			},
 			search : function() {
-				// custom minLength
+				// quantidade minima de caracteres para disparar a busca
 				var term = extractLast(this.value);
 				if (term.length < 1) {
 					return false;

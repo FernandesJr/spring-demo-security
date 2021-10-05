@@ -39,7 +39,20 @@ public class MedicoService {
         repository.save(m2);
     }
 
+    @Transactional(readOnly = true)
     public Medico buscarPorEmail(String username) {
         return repository.findByEmail(username).orElse(new Medico());
+    }
+
+    @Transactional(readOnly = false)
+    public void excluirEspecialidadeDeMedico(Long idMed, Long idEsp) {
+        Medico medico = repository.findById(idMed).get();
+        //Pecorre toda a lista de Especialidade do médico e remove a de Id igual à solicitada.
+        medico.getEspecialidades().removeIf(especialidade -> especialidade.getId().equals(idEsp));
+        //O própio Hibenete ao atualizar novamente o médico e perceber que na lista dele não têm
+        //determinada especialidade ele exclui o relacionamento N:N
+        //repository.save(medico); <- Não precisa deixe apenas para entendimento
+        //Por o objeto medico está em estado percistente durante essa transação qualquer mudança
+        //feita nele o Hibenete replica no BD
     }
 }

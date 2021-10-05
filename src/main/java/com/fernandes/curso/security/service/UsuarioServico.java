@@ -82,4 +82,13 @@ public class UsuarioServico implements UserDetailsService {
         //Caso a consulta volte vazia dispara um exceção
         //Enquanto isso a Class ExceptionController está ouvindo se a app dispara esse tipo para assim tratar.
     }
+
+    public boolean validarSenha(Usuario u, String senhaAtualForm) {
+        return new BCryptPasswordEncoder().matches(u.getSenha(), senhaAtualForm);
+    }
+
+    public void redefinirSenha(Usuario u, String novaSenha) {
+        u.setSenha(new BCryptPasswordEncoder().encode(novaSenha));
+        repository.save(u);
+    }
 }

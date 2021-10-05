@@ -1,3 +1,4 @@
+//Esse código se encontra na página do Jquery
 // processa o auto-complete
 $(function() {
 	// remove o espaco depois da virgula

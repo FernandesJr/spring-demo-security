@@ -61,5 +61,12 @@ $(document).ready(function() {
 	    });
 	    document.location.href = "/u/editar/dados/usuario/" + row.id + "/perfis/" + aux;
 	});
-	
-});	
+
+});
+
+//Verifica se os campos de input da nova senha estão iguais
+$('.pass').keyup(function(){
+    $('#senha1').val() === $('#senha2').val()
+        ? $('#senha3').removeAttr('readonly')
+        : $('#senha3').attr('readonly', 'readonly');
+});

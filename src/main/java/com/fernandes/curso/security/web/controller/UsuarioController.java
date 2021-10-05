@@ -8,12 +8,12 @@ import com.fernandes.curso.security.service.MedicoService;
 import com.fernandes.curso.security.service.UsuarioServico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -102,5 +102,31 @@ public class UsuarioController {
             return model;
         }
         return new ModelAndView("redirect:/u/lista");
+    }
+
+    @GetMapping("/editar/senha")
+    public String preEditarSenha(){
+        return "usuario/editar-senha";
+    }
+
+    @PostMapping("/confirmar/senha")
+    public String alterarSenha(@RequestParam("senha1") String s1,
+                               @RequestParam("senha2") String s2,
+                               @RequestParam("senha3") String s3,
+                               @AuthenticationPrincipal User user,
+                               RedirectAttributes attr){
+        if(!s1.equals(s2)){
+            attr.addFlashAttribute("falha", "Nova senha não confere, por favor verifique.");
+            return "redirect:/u/editar/senha";
+        }
+
+        Usuario u = servico.buscarPorEmail(user.getUsername());
+        if(!servico.validarSenha(u, s3)){
+            attr.addFlashAttribute("falha", "Senha do usuário não confere.");
+            return "redirect:/u/editar/senha";
+        }
+
+        servico.redefinirSenha(u, s3);
+        return "";
     }
 }
