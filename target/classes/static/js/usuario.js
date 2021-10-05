@@ -68,7 +68,6 @@ $(document).ready(function() {
 $('.pass').keyup(function(){
     if($('#senha1').val() == "" || $('#senha2').val() == ""){
         $('#senha3').val("");
-        //$("p").text("Hello world!");
         $('#senha3').attr('readonly', 'readonly');
     }else{
         $('#senha1').val() === $('#senha2').val()

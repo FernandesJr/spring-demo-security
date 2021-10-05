@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +44,7 @@ public class UsuarioServico implements UserDetailsService {
                 user.getSenha(),
                 AuthorityUtils.createAuthorityList(this.getAuthorities(user.getPerfis())) //Por causa desse get precisa adicionar o Transactional é nesse momento que o JPA vai buscar a lista no BD
         );
+        //lembrando que quem faz a verificação da senha é o próprio Spring Security
     }
 
     //Convertendo a List de perfis para um array
@@ -83,8 +83,8 @@ public class UsuarioServico implements UserDetailsService {
         //Enquanto isso a Class ExceptionController está ouvindo se a app dispara esse tipo para assim tratar.
     }
 
-    public boolean validarSenha(String senhaDB, String senhaAtualForm) {
-        return new BCryptPasswordEncoder().matches(senhaAtualForm, senhaDB);
+    public boolean isValidarSenha(String senhaAtualForm, String senhaDB) {
+        return new BCryptPasswordEncoder().matches(senhaAtualForm, senhaDB); //senha do DB está criptografada
     }
 
     public void redefinirSenha(Usuario u, String novaSenha) {

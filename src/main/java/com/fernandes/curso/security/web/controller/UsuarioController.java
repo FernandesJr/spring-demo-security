@@ -8,7 +8,6 @@ import com.fernandes.curso.security.service.MedicoService;
 import com.fernandes.curso.security.service.UsuarioServico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -121,7 +120,7 @@ public class UsuarioController {
         }
 
         Usuario u = servico.buscarPorEmail(user.getUsername());
-        if(!servico.validarSenha(u.getSenha(), s3)){
+        if(!servico.isValidarSenha(s3, u.getSenha())){
             attr.addFlashAttribute("falha", "Senha do usuário não confere.");
             return "redirect:/u/editar/senha";
         }

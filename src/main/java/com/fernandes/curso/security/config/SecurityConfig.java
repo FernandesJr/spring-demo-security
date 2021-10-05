@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/","/home").permitAll()
 
                 //Autorização para admim
-                .antMatchers("/u/editar/senha", "/u/confirmar/senha").hasAuthority(MEDICO)
+                .antMatchers("/u/editar/senha", "/u/confirmar/senha").hasAnyAuthority(MEDICO, PACIENTE)
                 .antMatchers("/u/**").hasAuthority(ADMIN)
 
                 //Autorização para médicos e adm
@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .accessDeniedPage("/acesso-negado"); //Tratando a exceção de restrição de acesso, está no HomeController
     }
 
-    //Dizendo ao Spring que tipo de criptografia será utilizada
+    //Dizendo ao Spring que tipo de criptografia será utilizada E por qual classe ele irá validar login
     //Exemplo
     //		System.out.println(new BCryptPasswordEncoder().encode("Fernandes"));
     //		System.out.println(new BCryptPasswordEncoder().encode("Fernandes"));
