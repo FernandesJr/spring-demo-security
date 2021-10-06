@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class MedicoService {
 
@@ -54,5 +56,9 @@ public class MedicoService {
         //repository.save(medico); <- Não precisa deixe apenas para entendimento
         //Por o objeto medico está em estado percistente durante essa transação qualquer mudança
         //feita nele o Hibenete replica no BD
+    }
+
+    public List<Medico> buscarMedicosPorEspecialidade(String especialidade) {
+        return repository.findMedicosByEspecialidade(especialidade);
     }
 }
