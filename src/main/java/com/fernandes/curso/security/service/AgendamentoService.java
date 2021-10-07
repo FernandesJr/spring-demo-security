@@ -37,6 +37,7 @@ public class AgendamentoService {
         repository.save(agendamento);
     }
 
+    @Transactional(readOnly = true)
     public Map<String, Object> buscarHistoricoPorPacienteEmail(String email, HttpServletRequest request) {
         datatables.setRequest(request);
         datatables.setColunas(DatatablesColunas.AGENDAMENTOS);
@@ -45,11 +46,16 @@ public class AgendamentoService {
         return datatables.getResponse(page);
     }
 
+    @Transactional(readOnly = true)
     public Map<String, Object> buscarHistoricoPorMedicoEmail(String email, HttpServletRequest request) {
         datatables.setRequest(request);
         datatables.setColunas(DatatablesColunas.AGENDAMENTOS);
         Pageable pageable = datatables.getPageable();
         Page<HistoricoPaciente> page = repository.findHistoricoByMedicoEmail(email, pageable);
         return datatables.getResponse(page);
+    }
+
+    public Agendamento buscarPorId(Long id) {
+        return repository.findById(id).get();
     }
 }
