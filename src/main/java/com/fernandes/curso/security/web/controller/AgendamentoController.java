@@ -3,6 +3,7 @@ package com.fernandes.curso.security.web.controller;
 import com.fernandes.curso.security.domain.Agendamento;
 import com.fernandes.curso.security.domain.Especialidade;
 import com.fernandes.curso.security.domain.Paciente;
+import com.fernandes.curso.security.domain.PerfilTipo;
 import com.fernandes.curso.security.service.AgendamentoService;
 import com.fernandes.curso.security.service.EspecialidadeService;
 import com.fernandes.curso.security.service.PacienteService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 
 @Controller
@@ -57,5 +60,22 @@ public class AgendamentoController {
         service.salvar(agendamento);
         attr.addFlashAttribute("sucesso", "Sua consulta foi agendada com sucesso.");
         return "redirect:/agendamentos/agendar";
+    }
+
+    //Mesma página para médicos e pacientes
+    @GetMapping({"/historico/consultas","/historico/paciente"})
+    public String historicoConsultas(){
+        return "agendamento/historico-paciente";
+    }
+
+    @GetMapping("/datatables/server/historico")
+    public ResponseEntity<?> retormoHistoricoConsultas(HttpServletRequest request, @AuthenticationPrincipal User user){
+        if(user.getAuthorities().contains(new SimpleGrantedAuthority(PerfilTipo.PACIENTE.getDesc()))){
+            return ResponseEntity.ok(service.buscarHistoricoPorPacienteEmail(user.getUsername(), request));
+        }
+        if(user.getAuthorities().contains(new SimpleGrantedAuthority(PerfilTipo.MEDICO.getDesc()))){
+            return ResponseEntity.ok(service.buscarHistoricoPorMedicoEmail(user.getUsername(), request));
+        }
+        return ResponseEntity.notFound().build();
     }
 }
