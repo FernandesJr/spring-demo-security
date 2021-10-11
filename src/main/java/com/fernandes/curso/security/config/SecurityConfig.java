@@ -4,12 +4,14 @@ import com.fernandes.curso.security.domain.PerfilTipo;
 import com.fernandes.curso.security.service.UsuarioServico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true) //Autoriza o uso de Anotações de autorizações nos métodos dos controles
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static String ADMIN   = PerfilTipo.ADMIN.getDesc();
@@ -24,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/webjars/**","/css/**","/js/**", "/image/**").permitAll()
                 .antMatchers("/","/home").permitAll()
+                .antMatchers("/u/novo/cadastro", "/u/cadastro/realizado", "/u/cadastro/paciente/salvar").permitAll()
 
                 //Autorização para admim
                 .antMatchers("/u/editar/senha", "/u/confirmar/senha").hasAnyAuthority(MEDICO, PACIENTE)

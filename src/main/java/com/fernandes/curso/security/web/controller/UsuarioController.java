@@ -8,10 +8,12 @@ import com.fernandes.curso.security.service.MedicoService;
 import com.fernandes.curso.security.service.UsuarioServico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -128,5 +130,27 @@ public class UsuarioController {
         servico.redefinirSenha(u, s1);
         attr.addFlashAttribute("sucesso", "Senha alterada com sucesso.");
         return "redirect:/u/editar/senha";
+    }
+
+    @GetMapping("/novo/cadastro")
+    public String cadastarUsuarioPaciente(Usuario usuario){
+        return "cadastrar-se";
+    }
+
+    @GetMapping("/cadastro/realizado")
+    public String cadastroRealizado(){
+        return "fragments/mensagem";
+    }
+
+    @PostMapping("/cadastro/paciente/salvar")
+    public String salvarCadastroPaciente(Usuario usuario, BindingResult result){
+        try {
+            servico.salvarCadastroPaciente(usuario);
+        }catch (DataIntegrityViolationException e){
+            //Caso já tenha o email cadastrado irá cair aqui nessa exception
+            result.reject("email", "Ops.. Email já cadastrado no sistema.");
+            return "cadastrar-se";
+        }
+        return "redirect:/u/cadastro/realizado";
     }
 }

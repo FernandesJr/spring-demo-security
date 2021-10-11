@@ -3,6 +3,7 @@ package com.fernandes.curso.security.service;
 import com.fernandes.curso.security.datatables.Datatables;
 import com.fernandes.curso.security.datatables.DatatablesColunas;
 import com.fernandes.curso.security.domain.Perfil;
+import com.fernandes.curso.security.domain.PerfilTipo;
 import com.fernandes.curso.security.domain.Usuario;
 import com.fernandes.curso.security.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UsuarioServico implements UserDetailsService {
@@ -38,7 +40,8 @@ public class UsuarioServico implements UserDetailsService {
     //Na autenticação o Spring vem nesse método para autenticar
     @Override @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Usuario user = buscarPorEmail(userName);
+        Usuario user = buscarPorEmailESenha(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário " + userName + " não ativo."));
         return new User(
                 user.getEmail(),
                 user.getSenha(),
@@ -66,16 +69,19 @@ public class UsuarioServico implements UserDetailsService {
         return datatables.getResponse(page);
     }
 
+    @Transactional(readOnly = false)
     public void salvarUsuario(Usuario usuario) {
         String crypt = new BCryptPasswordEncoder().encode(usuario.getSenha());
         usuario.setSenha(crypt);
         repository.save(usuario);
     }
 
+    @Transactional(readOnly = true)
     public Usuario buscarPorId(Long id) {
         return repository.findById(id).get();
     }
 
+    @Transactional(readOnly = true)
     public Usuario buscarPorIdPerfil(Long usuarioId, Long[] perfisId) {
         return repository.findByIdPerfis(usuarioId, perfisId)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário inexistente."));
@@ -83,12 +89,26 @@ public class UsuarioServico implements UserDetailsService {
         //Enquanto isso a Class ExceptionController está ouvindo se a app dispara esse tipo para assim tratar.
     }
 
+    @Transactional(readOnly = false)
     public boolean isValidarSenha(String senhaAtualForm, String senhaDB) {
         return new BCryptPasswordEncoder().matches(senhaAtualForm, senhaDB); //senha do DB está criptografada
     }
 
+    @Transactional(readOnly = true)
     public void redefinirSenha(Usuario u, String novaSenha) {
         u.setSenha(new BCryptPasswordEncoder().encode(novaSenha));
         repository.save(u);
+    }
+
+    @Transactional(readOnly = false)
+    public void salvarCadastroPaciente(Usuario usuario) {
+        String crypt = new BCryptPasswordEncoder().encode(usuario.getSenha());
+        usuario.setSenha(crypt);
+        usuario.addPerfil(PerfilTipo.PACIENTE);
+        repository.save(usuario);
+    }
+
+    public Optional<Usuario> buscarPorEmailESenha(String email){
+        return repository.findByEmailAndAtivo(email);
     }
 }

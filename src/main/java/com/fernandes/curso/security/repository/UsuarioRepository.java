@@ -25,4 +25,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
             "join u.perfis p " +
             "where u.id = :usuario AND p.id IN :perfis")
     Optional<Usuario> findByIdPerfis(@Param("usuario") Long usuarioId, @Param("perfis") Long[] perfisId);
+
+    @Query("select u from Usuario u where u.email like :email AND u.ativo = true")
+    Optional<Usuario> findByEmailAndAtivo(String email);
 }
