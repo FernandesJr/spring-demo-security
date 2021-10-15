@@ -61,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .logout()
                     .logoutSuccessUrl("/")
+                    .deleteCookies("JSESSIONID") //Evitar conflito de sessões
                 .and()
                     .exceptionHandling()
                     .accessDeniedPage("/acesso-negado") //Tratando a exceção de restrição de acesso, está no HomeController
