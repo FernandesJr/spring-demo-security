@@ -32,6 +32,6 @@ public class DemoSecurityApplication implements CommandLineRunner {
 		sender.send(message);
 		System.out.println("Tentei enviar");*/
 
-		emailService.enviarPedidoConfirmacaoCadastro("junior.fernandes@mcctecnologia.com.br","sad54f");
+		//emailService.enviarPedidoConfirmacaoCadastro("junior.fernandes@mcctecnologia.com.br","sad54f");
 	}
 }

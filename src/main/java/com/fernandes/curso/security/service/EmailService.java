@@ -47,4 +47,31 @@ public class EmailService {
 
     }
 
+    public void pedidoDeRecuperacaoSenha(String destino, String verificador) throws MessagingException {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper =
+                new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, "UTF-8");
+
+        //Adicionando variáveis a página que será enviada
+        Context context = new Context();
+        context.setVariable("titulo", "Recuperação de senha");
+        context.setVariable("texto", "Segue o código verificador, informe-o na página de recuperação de senha.");
+        context.setVariable("verificador", verificador);
+
+
+        String html = template.process("email/confirmacao", context);
+
+        helper.setTo(destino);
+        helper.setFrom("nao-responder@clinica.com"); //O From é setado pelo o application.properties. Alguns servidores iram mostrar esse email como uma espécie de máscara
+        helper.setSubject("Recuperação de senha");
+        helper.setText(html, true);
+
+        //Lembrete sempre colocar as img por último
+        helper.addInline("logo", new ClassPathResource("/static/image/spring-security.png")); //importante! projeto KAIZEN
+
+        mailSender.send(message);
+
+    }
+
 }

@@ -5,7 +5,9 @@ import com.fernandes.curso.security.datatables.DatatablesColunas;
 import com.fernandes.curso.security.domain.Perfil;
 import com.fernandes.curso.security.domain.PerfilTipo;
 import com.fernandes.curso.security.domain.Usuario;
+import com.fernandes.curso.security.exception.AcessoNegadoException;
 import com.fernandes.curso.security.repository.UsuarioRepository;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -16,7 +18,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +31,12 @@ public class UsuarioServico implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository repository;
+
     @Autowired
     private Datatables datatables;
+
+    @Autowired
+    private EmailService emailService;
 
     @Transactional(readOnly = true) //Somente leitura
     public Usuario buscarPorEmail(String email){
@@ -40,7 +48,7 @@ public class UsuarioServico implements UserDetailsService {
     //Na autenticação o Spring vem nesse método para autenticar
     @Override @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Usuario user = buscarPorEmailESenha(userName)
+        Usuario user = buscarPorEmailEAtivo(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário " + userName + " não ativo."));
         return new User(
                 user.getEmail(),
@@ -94,21 +102,53 @@ public class UsuarioServico implements UserDetailsService {
         return new BCryptPasswordEncoder().matches(senhaAtualForm, senhaDB); //senha do DB está criptografada
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     public void redefinirSenha(Usuario u, String novaSenha) {
         u.setSenha(new BCryptPasswordEncoder().encode(novaSenha));
         repository.save(u);
     }
 
     @Transactional(readOnly = false)
-    public void salvarCadastroPaciente(Usuario usuario) {
+    public void salvarCadastroPaciente(Usuario usuario) throws MessagingException {
         String crypt = new BCryptPasswordEncoder().encode(usuario.getSenha());
         usuario.setSenha(crypt);
         usuario.addPerfil(PerfilTipo.PACIENTE);
         repository.save(usuario);
+
+        //Gerar o código de verificação
+        gerarBase64(usuario.getEmail());
     }
 
-    public Optional<Usuario> buscarPorEmailESenha(String email){
+    @Transactional(readOnly = true)
+    public Optional<Usuario> buscarPorEmailEAtivo(String email){
         return repository.findByEmailAndAtivo(email);
+    }
+
+    public void gerarBase64(String email) throws MessagingException {
+        //Convertendo em base 64
+        String codigo = Base64Utils.encodeToString(email.getBytes());
+
+        emailService.enviarPedidoConfirmacaoCadastro(email, codigo);
+    }
+
+    @Transactional(readOnly = false)
+    public void ativarCadastroPaciente(String codigo){
+        //O código é o email do usuário em base64
+        String email = new String(Base64Utils.decodeFromString(codigo)); //Com um array de bytes forma a String
+        Usuario usuario = buscarPorEmail(email);
+        if(usuario.hasNotId()){
+            throw new AcessoNegadoException("Não foi possível ativar seu cadastro. Entre em contato com o suporte.");
+        }
+        usuario.setAtivo(true);
+    }
+
+    @Transactional(readOnly = false)
+    public void pedidoRedefinacaoSenha(String email) throws MessagingException {
+        Usuario usuario = buscarPorEmailEAtivo(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário inexistente. Ou inativo."));
+        String verificador = RandomString.make(6); //Há que o prof usou foi RandomStringUtils.randomAlphanumeric(6) porém não encontrei
+        usuario.setCodigoVerificador(verificador);
+
+        emailService.pedidoDeRecuperacaoSenha(email, verificador);
     }
 }
