@@ -58,7 +58,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/")
                 .and()
                     .exceptionHandling()
-                    .accessDeniedPage("/acesso-negado"); //Tratando a exceção de restrição de acesso, está no HomeController
+                    .accessDeniedPage("/acesso-negado") //Tratando a exceção de restrição de acesso, está no HomeController
+                .and()
+                    .rememberMe(); //Duração de Cookie de 2 semanas
     }
 
     //Dizendo ao Spring que tipo de criptografia será utilizada E por qual classe ele irá validar login
