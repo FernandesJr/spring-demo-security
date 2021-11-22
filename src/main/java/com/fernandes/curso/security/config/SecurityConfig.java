@@ -67,18 +67,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .accessDeniedPage("/acesso-negado") //Tratando a exceção de restrição de acesso, está no HomeController
                 .and()
                     .rememberMe(); //Duração de Cookie de 2 semanas
-
         http.sessionManagement()
                 .maximumSessions(1)  //Quantidade máxima de dispositivos por login
                 .maxSessionsPreventsLogin(true) //Permissão de apenas um dispositivo por login
                 .sessionRegistry(sessionRegistry());
+
+
+        //request.getSession(false).setMaxInactiveInterval(60)
     }
 
     //Dizendo ao Spring que tipo de criptografia será utilizada E por qual classe ele irá validar login
     //Exemplo
     //		System.out.println(new BCryptPasswordEncoder().encode("Fernandes"));
-    //		System.out.println(new BCryptPasswordEncoder().encode("Fernandes"));
-    //		System.out.println(new BCryptPasswordEncoder().encode("Fernandes"));
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(servico).passwordEncoder(new BCryptPasswordEncoder());

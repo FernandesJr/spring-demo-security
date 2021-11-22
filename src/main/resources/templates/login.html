@@ -30,13 +30,11 @@
 <!-- Custom styles for this template -->
 <link th:href="@{/css/style-login.css(v=${version})}" rel="stylesheet" />
 </head>
-<body>
+<body style="background:white;">
 	<form class="form-signin was-validated" method="post" 
 		th:action="@{/login}">
+		<section th:replace="fragments/logo :: logo"></section>
 		<div class="text-center mb-4">
-			<img class="mb-4" th:src="@{/image/spring-security.png}" alt=""
-				width="72" height="72">
-			<h1 class="h3 mb-3 font-weight-normal">Clínica Spring Security</h1>
 
 			<p class="font-weight-lighter">Seja bem-vindo.</p>
 			<p class="text-muted">Realize seu login para continuar</p>					

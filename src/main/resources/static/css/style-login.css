@@ -109,4 +109,12 @@ body {
   }
 }
 
+@media (min-width: 1025px)
+{
+  .logo{
+    position: absolute;
+    left: 50px;
+  }
+}
+
 

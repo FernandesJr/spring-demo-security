@@ -44,7 +44,7 @@ public class UsuarioServico implements UserDetailsService {
     }
 
     //Lembrando que o Security faz criptografia das senhas
-    //Sendo assim a Class ConfigSecurity recebe qual o padrão de criptografia, para comparar neste momento
+    //Sendo assim a Class SecurityConfig recebe qual o padrão de criptografia, para comparar neste momento
     //Na autenticação o Spring vem nesse método para autenticar
     @Override @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {

@@ -32,6 +32,15 @@ footer {
 footer p {
   margin-bottom: .25rem;
 }
+ /*No footer*/
+.mudar-cor:hover{
+    margin-left: 5px;
+    margin-right: 5px;
+    color: green;
+    background-color: #00c2cb;
+    border-radius: 5px;
+    padding: 3px;
+}
 
 .modal .modal-body input, .modal .modal-body textarea{
     border: 1px solid #e6e6e6;

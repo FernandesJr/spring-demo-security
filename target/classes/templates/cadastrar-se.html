@@ -34,14 +34,11 @@
 <script th:src="@{/webjars/jquery/jquery.min.js(v=${version}) }"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js(v=${version}) }"></script>
 </head>
-<body>	
+<body style="background:white;">
 	<form class="form-signin was-validated" method="POST" 
 		th:action="@{/u/cadastro/paciente/salvar}" th:object="${usuario}">		
 		<div class="text-center mb-4">
-			<img class="mb-4" th:src="@{/image/spring-security.png}" alt=""
-				width="72" height="72">
-			<h1 class="h3 mb-3 font-weight-normal">Clínica Spring Security</h1>
-
+			<section th:replace="fragments/logo :: logo"></section>
 			<p class="font-weight-lighter">Seja bem-vindo.</p>
 			<p class="text-muted">Crie seu cadastro aqui!</p>
 		</div>
