@@ -28,7 +28,7 @@ public class EmailService {
 
         //Adicionando variáveis a página que será enviada
         Context context = new Context();
-        context.setVariable("titulo", "Bem vindo a clínica Spring Security");
+        context.setVariable("titulo", "Bem vindo a clínica Med+");
         context.setVariable("texto", "Precisamos que confirme seu cadastro.");
         context.setVariable("linkConfirmacao",
                 "http://localhost:8080/u/confirmacao/cadastro?codigo=" + codigo);
@@ -41,7 +41,7 @@ public class EmailService {
         helper.setText(html, true);
 
         //Lembrete sempre colocar as img por último
-        helper.addInline("logo", new ClassPathResource("/static/image/spring-security.png")); //importante! projeto KAIZEN
+        helper.addInline("logo", new ClassPathResource("/static/image/logosemborda.png")); //importante! projeto KAIZEN
 
         mailSender.send(message);
 
@@ -68,7 +68,7 @@ public class EmailService {
         helper.setText(html, true);
 
         //Lembrete sempre colocar as img por último
-        helper.addInline("logo", new ClassPathResource("/static/image/spring-security.png")); //importante! projeto KAIZEN
+        helper.addInline("logo", new ClassPathResource("/static/image/logosemborda.png")); //importante! projeto KAIZEN
 
         mailSender.send(message);
 
