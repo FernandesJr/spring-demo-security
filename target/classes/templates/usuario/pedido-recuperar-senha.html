@@ -34,7 +34,7 @@
 <script th:src="@{/webjars/jquery/jquery.min.js(v=${version}) }"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js(v=${version}) }"></script>
 </head>
-<body>	
+<body style="background: white;">
 	<form th:action="@{/u/p/recuperar/senha}"
 			class="form-signin was-validated"  method="GET" >		
 		<div class="text-center mb-4">
@@ -61,8 +61,7 @@
 			<a class="flex-sm-fill text-sm-left nav-link text-decoration-none" th:href="@{/}">
 				<i class="fas fa-home"></i>&nbsp;Home</a>
 		</nav>
-		<p class="mt-5 mb-3 text-muted text-center">Clínica Spring
-			Security&copy; 2021</p>
+		<p class="mt-5 mb-3 text-muted text-center">&copy; Clínica Med+ 2021</p>
 	</form>
 </body>
 </html>
